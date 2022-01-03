@@ -1,0 +1,34 @@
+{
+  "name": "@sa-mp/cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "bin": {
+    "nodesamp": "./dist/index.js"
+  },
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node . -h",
+    "compile": "tsc",
+    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node . -h\""
+  },
+  "author": "dev2alert",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mime": "^2.0.3",
+    "@types/node": "^16.4.13",
+    "cross-env": "^7.0.3",
+    "tsc-watch": "^4.5.0",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
+    "commander": "^8.3.0",
+    "iconv-lite": "^0.6.3",
+    "json5": "^2.2.0",
+    "mime": "^3.0.0",
+    "reflect-metadata": "^0.1.13",
+    "yaml": "^1.10.2"
+  }
+}
