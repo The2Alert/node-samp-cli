@@ -143,14 +143,11 @@ export class Config {
         if(params.rconPassword !== undefined)
             text += "rcon_password " + params.rconPassword + "\n";
         const plugins: Plugin[] = this.root.getPlugins();
-        if(plugins.length > 0) {
-            let names: string[] = plugins.filter((plugin) => plugin.isSupported()).map((plugin) => plugin.getName());
-            names.push("nodesamp");
-            if(process.platform !== "win32")
-                names = names.map((name) => name + ".so");
-            text += "plugins " + names.join(" ") + "\n";
-        }
-        if(this.root.getPlugins().length === 0) {}
+        let names: string[] = plugins.length !== 0 ? plugins.filter((plugin) => plugin.isSupported()).map((plugin) => plugin.getName()) : [];
+        names.push("nodesamp");
+        if(process.platform !== "win32")
+            names = names.map((name) => name + ".so");
+        text += "plugins " + names.join(" ") + "\n";
         if(params.password !== undefined)
             text += "password " + params.password + "\n";
         if(params.mapName !== undefined)

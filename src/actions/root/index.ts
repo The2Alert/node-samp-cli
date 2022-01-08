@@ -36,7 +36,7 @@ export class Root {
             else this.plugins = [];
             await this.config.createServerConfig();
             await this.createPluginConfig();
-            spawn("samp-server", {cwd: this.getServerPath(), stdio: "inherit"});
+            spawn(process.platform === "win32" ? "./samp-server.exe" : "./samp03svr", {cwd: this.getServerPath(), stdio: "inherit"});
         } catch(error) {
             if(error instanceof ConfigException)
                 logger.config.error(error);
