@@ -20,5 +20,5 @@
 
 ## License
 <p>
-    <a href="./LICENSE">MIT</a>
+    <a href="https://github.com/dev2alert/node-samp-cli/blob/main/LICENSE">MIT</a>
 </p>
