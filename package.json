@@ -1,6 +1,6 @@
 {
   "name": "@sa-mp/cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Command Line Interface (CLI) for NodeSamp.",
   "keywords": ["nodesamp", "sa-mp", "samp", "cli"],
   "repository": "github:dev2alert/node-samp-cli",
