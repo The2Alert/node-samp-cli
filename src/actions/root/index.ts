@@ -2,7 +2,7 @@ import "reflect-metadata";
 import {program} from "commander";
 import {unlink, writeFile} from "fs/promises";
 import {join} from "path";
-import {spawn} from "child_process";
+import {spawn} from "cross-spawn";
 import {Config, ConfigPathTypes, ConfigException} from "./config";
 import * as logger from "../../logger";
 import {ConfigParams} from "./config-params";
@@ -36,7 +36,8 @@ export class Root {
             else this.plugins = [];
             await this.config.createServerConfig();
             await this.createPluginConfig();
-            spawn(process.platform === "win32" ? "./samp-server.exe" : "./samp03svr", {cwd: this.getServerPath(), stdio: "inherit"});
+            const serverPath: string = this.getServerPath();
+            spawn(process.platform === "win32" ? join(serverPath, "./samp-server.exe") : join(serverPath, "./samp03svr"), {cwd: serverPath, stdio: "inherit"});
         } catch(error) {
             if(error instanceof ConfigException)
                 logger.config.error(error);

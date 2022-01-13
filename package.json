@@ -1,8 +1,13 @@
 {
   "name": "@sa-mp/cli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Command Line Interface (CLI) for NodeSamp.",
-  "keywords": ["nodesamp", "sa-mp", "samp", "cli"],
+  "keywords": [
+    "nodesamp",
+    "sa-mp",
+    "samp",
+    "cli"
+  ],
   "repository": "github:dev2alert/node-samp-cli",
   "publishConfig": {
     "access": "public"
@@ -14,13 +19,14 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node . -h",
     "compile": "tsc",
-    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node . -h\"",
+    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node . ../starter\"",
     "postinstall": "cross-env NODE_ENV=production node ./dist/install.js",
     "install-dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node ./dist/install.js\""
   },
   "author": "dev2alert",
   "license": "MIT",
   "devDependencies": {
+    "@types/cross-spawn": "^6.0.2",
     "@types/download": "^8.0.1",
     "@types/mime": "^2.0.3",
     "@types/node": "^16.4.13",
@@ -28,11 +34,12 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "cross-env": "^7.0.3",
     "chalk": "^4.1.2",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "commander": "^8.3.0",
+    "cross-env": "^7.0.3",
+    "cross-spawn": "^7.0.3",
     "download": "^8.0.0",
     "extract-zip": "^2.0.1",
     "iconv-lite": "^0.6.3",
