@@ -1,19 +1,22 @@
+import {plainToClass} from "class-transformer";
+import {validate} from "class-validator";
 import * as fs from "fs";
-import {access, unlink, link, readdir} from "fs/promises";
+import {access, unlink, link, readdir, readFile} from "fs/promises";
 import {join, parse, basename} from "path";
 import {Root} from ".";
 import {Config} from "./config";
 import {ConfigParams} from "./config-params";
+import {PackageParams} from "./package-params";
 import {PluginParams} from "./plugin-params";
 
 export class Plugin {
-    public static async create(root: Root, params: PluginParams): Promise<Plugin> {
-        const plugin = new Plugin(root, params);
+    public static async create(root: Root, pluginsPath: string, params: PluginParams): Promise<Plugin> {
+        const plugin = new Plugin(root, pluginsPath, params);
         await plugin.create();
         return plugin;
     }
 
-    constructor(public readonly root: Root, public readonly params: PluginParams) {}
+    constructor(public readonly root: Root, public readonly pluginsPath: string, public readonly params: PluginParams) {}
 
     public name?: string;
     public path?: string;
@@ -26,11 +29,7 @@ export class Plugin {
     public async create(): Promise<void> {
         if(!this.isSupported())
             return;
-        const config: Config | null = this.root.getConfig();
-        if(config === null)
-            return;
-        const configParams: ConfigParams = config.getParams();
-        this.path = join(this.root.getPackageFullPath(), configParams.pluginsPath, this.params.path);
+        this.path = join(this.pluginsPath, this.params.path);
         this.name = parse(this.getPath()).name;
         try {
             await access(this.getPath(), fs.constants.F_OK);
@@ -64,9 +63,42 @@ export async function removePlugins(root: Root): Promise<void> {
     }
 }
 
-export async function createPlugins(root: Root, paramsList: PluginParams[]): Promise<Plugin[]> {
+export async function createPlugins(root: Root, plugins: (string | PluginParams)[]): Promise<Plugin[]> {
     const result: Plugin[] = [];
-    for(const params of paramsList)
-        result.push(await Plugin.create(root, params));
+    for(const params of plugins) {
+        if(typeof params === "string")
+            result.push(...await createPackagePlugins(root, params));
+        else {
+            const config: Config | null = root.getConfig();
+            if(config === null)
+                break;
+            const configParams: ConfigParams = config.getParams();
+            const pluginsPath: string = join(root.getPackageFullPath(), configParams.pluginsPath);
+            result.push(await Plugin.create(root, pluginsPath, params));
+        }
+    }
+    return result;
+}
+
+export async function createPackagePlugins(root: Root, packageName: string): Promise<Plugin[]> {
+    const packagePath: string = join(root.getPackageFullPath(), "./node_modules", packageName);
+    let packageContent: unknown;
+    try {
+        packageContent = JSON.parse(String(await readFile(join(packagePath, "./package.json"))));
+    } catch(error) {
+        throw new Error(`Package ${JSON.stringify(packageName)} not found.`);
+    }
+    const packageParams: PackageParams = plainToClass(PackageParams, packageContent);
+    Config.throwValidationErrors(await validate(packageParams));
+    const plugins: (string | PluginParams)[] = packageParams.config.samp.plugins;
+    const result: Plugin[] = [];
+    for(const params of plugins) {
+        if(typeof params === "string")
+            result.push(...await createPackagePlugins(root, params));
+        else {
+            const pluginsPath: string = join(packagePath, packageParams.config.samp.pluginsPath);
+            result.push(await Plugin.create(root, pluginsPath, params));
+        }
+    }
     return result;
 }

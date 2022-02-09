@@ -34,7 +34,7 @@ export class Config {
         return Config.parsers[info.mimeType] ?? null;
     }
 
-    private static throwValidationErrors(errors: ValidationError[]): void {
+    public static throwValidationErrors(errors: ValidationError[]): void {
         for(const error of errors) {
             if(error.constraints) {
                 for(const message of Object.values(error.constraints))

@@ -1,3 +1,5 @@
 /node_modules
 /dist/**/*.js
+!/dist/install.js
+!/dist/logger.js
 /server

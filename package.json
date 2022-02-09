@@ -1,6 +1,6 @@
 {
   "name": "@sa-mp/cli",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Command Line Interface (CLI) for NodeSamp.",
   "keywords": [
     "nodesamp",
@@ -19,9 +19,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node . -h",
     "compile": "tsc",
-    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node . ../starter\"",
-    "postinstall": "cross-env NODE_ENV=production node ./dist/install.js",
-    "install-dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node ./dist/install.js\""
+    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node . -h\"",
+    "postinstall": "cross-env NODE_ENV=production node ./dist/install.js"
   },
   "author": "dev2alert",
   "license": "MIT",

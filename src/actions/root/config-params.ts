@@ -1,6 +1,5 @@
-import {Type} from "class-transformer";
-import {IsArray, IsBoolean, IsInt, IsOptional, IsString, IsUrl, ValidateNested} from "class-validator";
-import {PluginParams} from "./plugin-params";
+import {IsBoolean, IsInt, IsOptional, IsString, IsUrl} from "class-validator";
+import {IsPluginParams, PluginParams} from "./plugin-params";
 
 export class ConfigParams {
     @IsOptional()
@@ -36,14 +35,12 @@ export class ConfigParams {
     public rconPassword?: string;
 
     @IsOptional()
-    @IsArray()
-    @ValidateNested({each: true})
-    @Type(() => PluginParams)
-    public plugins?: PluginParams[];
+    @IsPluginParams()
+    public plugins: (string | PluginParams)[] = [];
 
     @IsOptional()
     @IsString()
-    public pluginsPath: string = ".";
+    public pluginsPath: string = "./plugins";
 
     @IsOptional()
     @IsString()

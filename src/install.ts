@@ -11,13 +11,14 @@ export function downloadArchive(): Promise<Buffer> {
 }
 
 export async function install(): Promise<void> {
-    log("Installation...");
+    log("Downloading...");
     const tmpPath: string = join(__dirname, "../tmp");
     const archivePath: string = join(tmpPath, "./server.zip");
     const serverPath: string = join(__dirname, "../server");
     await mkdir(tmpPath);
     const archive: Buffer = await downloadArchive();
     await writeFile(archivePath, archive);
+    log("Extracting...");
     await extract(archivePath, {dir: serverPath});
     await unlink(archivePath);
     await rmdir(tmpPath);

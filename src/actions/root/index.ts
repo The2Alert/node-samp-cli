@@ -31,9 +31,7 @@ export class Root {
             } else this.config = await Config.get(this, ConfigPathTypes.PACKAGE, this.getPackageFullPath());
             const params: ConfigParams = this.config.getParams();
             await removePlugins(this);
-            if(params.plugins)
-                this.plugins = await createPlugins(this, params.plugins);
-            else this.plugins = [];
+            this.plugins = await createPlugins(this, params.plugins);
             await this.config.createServerConfig();
             await this.createPluginConfig();
             const serverPath: string = this.getServerPath();
