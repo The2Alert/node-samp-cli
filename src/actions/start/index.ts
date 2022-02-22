@@ -8,9 +8,9 @@ import * as logger from "../../logger";
 import {ConfigParams} from "./config-params";
 import {createPlugins, Plugin, removePlugins} from "./plugin";
 
-export class Root {
-    public static create(packagePath: string): Root {
-        return new Root(packagePath);
+export class Start {
+    public static create(packagePath: string): Start {
+        return new Start(packagePath);
     }
 
     constructor(private readonly packagePath: string) {}
@@ -18,7 +18,8 @@ export class Root {
     private packageFullPath?: string;
     private serverPath?: string;
     private config?: Config | null;
-    private plugins?: Plugin[];
+    private pluginsPath?: string;
+    private plugins?: Record<string, Plugin>;
 
     public async action(): Promise<void> {
         this.packageFullPath = join(process.cwd(), this.packagePath);
@@ -31,7 +32,9 @@ export class Root {
             } else this.config = await Config.get(this, ConfigPathTypes.PACKAGE, this.getPackageFullPath());
             const params: ConfigParams = this.config.getParams();
             await removePlugins(this);
-            this.plugins = await createPlugins(this, params.plugins);
+            this.pluginsPath = join(this.getPackageFullPath(), params.pluginsPath);
+            this.plugins = {};
+            await createPlugins(this, this.plugins, params.plugins);
             await this.config.createServerConfig();
             await this.createPluginConfig();
             const serverPath: string = this.getServerPath();
@@ -75,7 +78,11 @@ export class Root {
         }));
     }
 
-    public getPlugins(): Plugin[] {
-        return this.plugins ?? [];
+    public getPluginsPath(): string {
+        return this.pluginsPath ?? "";
+    }
+
+    public getPlugins(): Record<string, Plugin> {
+        return this.plugins ?? {};
     }
 }

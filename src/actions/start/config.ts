@@ -8,7 +8,7 @@ import {plainToClass} from "class-transformer";
 import {ValidationError, validate} from "class-validator";
 import {encode} from "iconv-lite";
 import {ConfigParams} from "./config-params";
-import {Root} from ".";
+import {Start} from ".";
 import {Plugin} from "./plugin";
 
 export enum ConfigPathTypes {
@@ -45,14 +45,14 @@ export class Config {
         }
     }
 
-    public static async get(root: Root, type: ConfigPathTypes, path: string): Promise<Config> {
-        const config = new Config(root, type, path);
+    public static async get(start: Start, type: ConfigPathTypes, path: string): Promise<Config> {
+        const config = new Config(start, type, path);
         await config.get();
         return config;
     }
 
     constructor(
-        public readonly root: Root,
+        public readonly start: Start,
         public readonly type: ConfigPathTypes, 
         public readonly path: string
     ) {}
@@ -142,12 +142,12 @@ export class Config {
             text += "weburl " + params.webUrl + "\n";
         if(params.rconPassword !== undefined)
             text += "rcon_password " + params.rconPassword + "\n";
-        const plugins: Plugin[] = this.root.getPlugins();
-        let names: string[] = plugins.length !== 0 ? plugins.filter((plugin) => plugin.isSupported()).map((plugin) => plugin.getName()) : [];
-        names.push("nodesamp");
+        const plugins: Record<string, Plugin> = this.start.getPlugins();
+        let pluginNames: string[] = Object.values(plugins).map((plugin) => plugin.name);
+        pluginNames.push("nodesamp");
         if(process.platform !== "win32")
-            names = names.map((name) => name + ".so");
-        text += "plugins " + names.join(" ") + "\n";
+            pluginNames = pluginNames.map((name) => name + ".so");
+        text += "plugins " + pluginNames.join(" ") + "\n";
         if(params.password !== undefined)
             text += "password " + params.password + "\n";
         if(params.mapName !== undefined)
@@ -202,7 +202,7 @@ export class Config {
             text += "conncookies " + Number(params.connCookies) + "\n";
         if(params.cookieLogging !== undefined)
             text += "cookielogging " + Number(params.cookieLogging) + "\n";
-        await writeFile(join(this.root.getServerPath(), "./server.cfg"), encode(text, "cp1251"));
+        await writeFile(join(this.start.getServerPath(), "./server.cfg"), encode(text, "cp1251"));
     }
 }
 

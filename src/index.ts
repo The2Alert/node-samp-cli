@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import {program} from "commander";
-import {Root} from "./actions/root";
+import {Start} from "./actions/start";
 
 program
 .name("nodesamp")
@@ -15,6 +15,6 @@ program
     "Print the current version."   
 )
 .helpOption("-h, --help", "Print usage information.")
-.action((packagePath) => Root.create(packagePath).action());
+.action((packagePath) => Start.create(packagePath).action());
 
 program.parse(process.argv);
