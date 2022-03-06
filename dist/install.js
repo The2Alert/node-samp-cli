@@ -14,14 +14,14 @@ function downloadArchive() {
 }
 exports.downloadArchive = downloadArchive;
 async function install() {
-    (0, logger_1.log)("Downloading...");
+    logger_1.Logger.log("Downloading...");
     const tmpPath = (0, path_1.join)(__dirname, "../tmp");
     const archivePath = (0, path_1.join)(tmpPath, "./server.zip");
     const serverPath = (0, path_1.join)(__dirname, "../server");
     await (0, promises_1.mkdir)(tmpPath);
     const archive = await downloadArchive();
     await (0, promises_1.writeFile)(archivePath, archive);
-    (0, logger_1.log)("Extracting...");
+    logger_1.Logger.log("Extracting...");
     await extract(archivePath, { dir: serverPath });
     await (0, promises_1.unlink)(archivePath);
     await (0, promises_1.rmdir)(tmpPath);
@@ -29,7 +29,7 @@ async function install() {
         await (0, promises_1.chmod)((0, path_1.join)(serverPath, "./samp03svr"), 0o777);
         await (0, promises_1.chmod)((0, path_1.join)(serverPath, "./announce"), 0o777);
     }
-    (0, logger_1.log)("Installed.");
+    logger_1.Logger.log("Installed.");
 }
 exports.install = install;
 install();

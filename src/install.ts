@@ -2,7 +2,7 @@ import {mkdir, writeFile, unlink, rmdir, chmod} from "fs/promises";
 import * as download from "download";
 import * as extract from "extract-zip";
 import {join} from "path";
-import {log} from "./logger";
+import {Logger} from "./logger";
 
 export function downloadArchive(): Promise<Buffer> {
     if(process.platform === "win32")
@@ -11,14 +11,14 @@ export function downloadArchive(): Promise<Buffer> {
 }
 
 export async function install(): Promise<void> {
-    log("Downloading...");
+    Logger.log("Downloading...");
     const tmpPath: string = join(__dirname, "../tmp");
     const archivePath: string = join(tmpPath, "./server.zip");
     const serverPath: string = join(__dirname, "../server");
     await mkdir(tmpPath);
     const archive: Buffer = await downloadArchive();
     await writeFile(archivePath, archive);
-    log("Extracting...");
+    Logger.log("Extracting...");
     await extract(archivePath, {dir: serverPath});
     await unlink(archivePath);
     await rmdir(tmpPath);
@@ -26,7 +26,7 @@ export async function install(): Promise<void> {
         await chmod(join(serverPath, "./samp03svr"), 0o777);
         await chmod(join(serverPath, "./announce"), 0o777);
     }
-    log("Installed.");
+    Logger.log("Installed.");
 }
 
 install();

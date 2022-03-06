@@ -1,7 +1,11 @@
 import {IsBoolean, IsInt, IsOptional, IsString, IsUrl} from "class-validator";
-import {IsPluginParams, PluginParams} from "./plugin-params";
+import {IsPluginParams, PackagePluginParams} from "./plugin-params";
 
-export class ConfigParams {
+export class PackageConfigParams {
+    public static getDefault(): PackageConfigParams {
+        return new PackageConfigParams;
+    }
+
     @IsOptional()
     @IsBoolean()
     public lanMode?: boolean;
@@ -36,11 +40,11 @@ export class ConfigParams {
 
     @IsOptional()
     @IsPluginParams()
-    public plugins: (string | PluginParams)[] = [];
+    public plugins?: (string | PackagePluginParams)[];
 
     @IsOptional()
     @IsString()
-    public pluginsPath: string = "./plugins";
+    public pluginsPath?: string;
 
     @IsOptional()
     @IsString()

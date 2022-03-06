@@ -1,19 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.config = exports.error = exports.log = void 0;
+exports.Logger = void 0;
 const chalk = require("chalk");
-function log(content) {
-    return console.log(chalk.yellow.bold("[NodeSamp]"), content);
-}
-exports.log = log;
-function error(error) {
-    return console.log(chalk.yellow.bold("[NodeSamp]") + chalk.red.bold("[Error]"), error.message);
-}
-exports.error = error;
-var config;
-(function (config) {
-    function error(error) {
-        return console.log(chalk.yellow.bold("[Config]") + chalk.red.bold("[Error]"), error.message);
+var Logger;
+(function (Logger) {
+    function log(content) {
+        console.log(chalk.yellow.bold("[NodeSamp]"), content);
     }
-    config.error = error;
-})(config = exports.config || (exports.config = {}));
+    Logger.log = log;
+    function error(error) {
+        console.log(chalk.yellow.bold("[NodeSamp]") + chalk.red.bold("[Error]"), error.message);
+    }
+    Logger.error = error;
+    let Config;
+    (function (Config) {
+        function error(error) {
+            console.log(chalk.yellow.bold("[Config]") + chalk.red.bold("[Error]"), error.message);
+        }
+        Config.error = error;
+    })(Config = Logger.Config || (Logger.Config = {}));
+})(Logger = exports.Logger || (exports.Logger = {}));

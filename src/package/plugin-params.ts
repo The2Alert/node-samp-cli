@@ -1,6 +1,6 @@
 import {Validate, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface} from "class-validator";
 
-export interface PluginParams {
+export interface PackagePluginParams {
     platform: string;
     path: string;
 }
