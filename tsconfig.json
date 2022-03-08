@@ -11,5 +11,6 @@
         "skipLibCheck": true,
         "emitDecoratorMetadata": true,
         "strictPropertyInitialization": false
-    }
+    },
+    "include": ["./src"]
 }

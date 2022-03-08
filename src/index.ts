@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import {program} from "commander";
-import {CreateAction} from "./actions/create";
-import {StartAction} from "./actions/start";
+import {StartCommand} from "./commands/start";
+import {InitCommand} from "./commands/init";
+import {CreateCommand} from "./commands/create";
 
 program
 .name("nodesamp")
@@ -9,22 +10,19 @@ program
 .description("Run package in SA-MP environment.")
 .argument("<path>", "Package path.")
 .option("-c, --config <path>", "Configuration path.")
-.option("-o, --options <list>", "Node.js options.")
+.option("-o, --options <options>", "Node.js options.")
 .version(require("../package.json").version, "-v, --version", "Display current version.")
 .helpOption("-h, --help", "Display usage information.")
-.action((path, options) => StartAction.action(path, options));
+.action((path, options) => StartCommand.action(path, options));
+
+program
+.command("init")
+.description("Create configuration file.")
+.action(() => InitCommand.action());
 
 program
 .command("create")
 .description("Create package.")
-.option("-n, --name <name>", "Package name.")
-.option("-t, --ts", "Usage TypeScript.")
-.option("-j, --js", "Usage JavaScript.")
-.option("--docker", "Usage Docker.")
-.option("--jest", "Usage Jest.")
-.option("--eslint", "Usage ESLint.")
-.option("--prettier", "Usage Prettier.")
-.action((options) => CreateAction.action(options));
+.action(() => CreateCommand.action());
 
-program
-.parse(process.argv);
+program.parse(process.argv);

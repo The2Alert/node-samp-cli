@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import {access, link} from "fs/promises";
 import {basename, join, parse} from "path";
-import {Package, PackagePluginParams, PackageException} from ".";
+import {Package, PackagePluginParams, PackageError} from ".";
 
 export class PackagePlugin {
     public static readonly reservedNames: string[] = ["nodesamp"];
@@ -21,7 +21,7 @@ export class PackagePlugin {
         try {
             await access(this.path, fs.constants.F_OK);
         } catch(error) {
-            throw new PackageException(`Plugin ${JSON.stringify(this.name)} not found.`);
+            throw new PackageError(`Plugin ${JSON.stringify(this.name)} not found.`);
         }
         await link(this.path, this.serverPath);
         return this;

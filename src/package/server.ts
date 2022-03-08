@@ -3,8 +3,8 @@ import {readdir, readFile, unlink, writeFile} from "fs/promises";
 import {encode} from "iconv-lite";
 import {spawn} from "cross-spawn";
 import {plainToClass} from "class-transformer";
-import {Package, PackagePlugin, PackageConfigParams, PackagePluginParams, PackageException, PackageConfig, PackagePluginPackageParams} from ".";
-import { validate } from "class-validator";
+import {validate} from "class-validator";
+import {Package, PackagePlugin, PackageConfigParams, PackagePluginParams, PackageError, PackageConfig, PackagePluginPackageParams} from ".";
 
 export class PackageServer {
     constructor(public readonly pkg: Package, public readonly path: string) {}
@@ -37,7 +37,7 @@ export class PackageServer {
         try {
             content = JSON.parse(String(await readFile(join(path, "./package.json"))));
         } catch(error) {
-            throw new PackageException(`Package ${JSON.stringify(name)} not found.`);
+            throw new PackageError(`Package ${JSON.stringify(name)} not found.`);
         }
         const packageParams: PackagePluginPackageParams = plainToClass(PackagePluginPackageParams, content);
         PackageConfig.throwValidationErrors(await validate(packageParams));

@@ -12,6 +12,10 @@ var Logger;
         console.log(chalk.yellow.bold("[NodeSamp]") + chalk.red.bold("[Error]"), error.message);
     }
     Logger.error = error;
+    function step({ current, max }, content) {
+        console.log(chalk.yellow.bold("[NodeSamp]") + chalk.white.bold(`[${current}/${max}]`), content);
+    }
+    Logger.step = step;
     let Config;
     (function (Config) {
         function error(error) {

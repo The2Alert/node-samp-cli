@@ -8,7 +8,13 @@ import {validate, ValidationError} from "class-validator";
 import {plainToClass} from "class-transformer";
 import {Package} from ".";
 import {PackageConfigParams} from "./config-params";
-import {PackageConfigException, PackageException} from "./exceptions";
+import {PackageConfigError, PackageError} from "./errors";
+
+export enum PackageConfigFormat {
+    JSON,
+    JSON5,
+    YAML
+}
 
 export interface PackageConfigInfo {
     path: string;
@@ -32,7 +38,7 @@ export class PackageConfig {
         for(const error of errors) {
             if(error.constraints) {
                 for(const message of Object.values(error.constraints))
-                    throw new PackageConfigException(message);
+                    throw new PackageConfigError(message);
             }
             if(error.children)
                 PackageConfig.throwValidationErrors(error.children);
@@ -80,17 +86,17 @@ export class PackageConfig {
         const info: PackageConfigInfo | null = await this.getInfo();
         if(info === null) {
             if(this.path !== null)
-                throw new PackageException("Configuration file not found.");
+                throw new PackageError("Configuration file not found.");
             else return PackageConfigParams.getDefault();
         }
         const parser: PackageConfigParser | null = PackageConfig.getParser(info);
         if(parser === null)
-            throw new PackageException("Configuration format not supported.");
+            throw new PackageError("Configuration format not supported.");
         let params: PackageConfigParams;
         try {
             params = plainToClass(PackageConfigParams, parser(String(await readFile(info.path))));
         } catch(error) {
-            throw new PackageConfigException((error as Error).message);
+            throw new PackageConfigError((error as Error).message);
         }
         PackageConfig.throwValidationErrors(await validate(params));
         return params;

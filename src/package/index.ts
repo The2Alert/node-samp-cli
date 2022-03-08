@@ -9,6 +9,7 @@ export interface PackageOptions {
     path: string;
     serverPath: string;
     configPath?: string;
+    nodeOptions?: string;
     platform?: NodeJS.Platform;
 }
 
@@ -39,14 +40,14 @@ export class Package {
         this.plugins = {};
         await this.server.createPlugins();
         await this.server.createConfig();
-        this.nodeOptions = this.configParams.nodeOptions ?? "";
+        this.nodeOptions = this.options.nodeOptions ?? this.configParams.nodeOptions ?? "";
         await this.server.createPluginConfig();
         await this.server.start();
         return this;
     }
 }
 
-export * from "./exceptions";
+export * from "./errors";
 export * from "./server";
 export * from "./config";
 export * from "./plugin";

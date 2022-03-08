@@ -19,7 +19,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node . -h",
     "compile": "tsc",
-    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node . create -h\"",
+    "dev": "cross-env NODE_ENV=development tsc-watch --onSuccess \"node . create\"",
     "postinstall": "cross-env NODE_ENV=production node ./dist/install.js"
   },
   "author": "dev2alert",
